@@ -1,0 +1,45 @@
+{
+  "version": "1.2.0",
+  "retrySeconds": [3, 10, 20, 30, 60],
+  "updateSeconds": 86400,
+  "formats": [
+    {"id": "mp3_320", "name": "MP3 · 320 kb/s", "suffix": "320k", "args": ["-f", "bestaudio/best", "-x", "--audio-format", "mp3", "--audio-quality", "320K"]},
+    {"id": "mp3_192", "name": "MP3 · 192 kb/s", "suffix": "192k", "args": ["-f", "bestaudio/best", "-x", "--audio-format", "mp3", "--audio-quality", "192K"]},
+    {"id": "mp3_max", "name": "MP3 · auto máxima", "suffix": "auto-max", "args": ["-f", "bestaudio/best", "-x", "--audio-format", "mp3", "--audio-quality", "0"]},
+    {"id": "mp3_min", "name": "MP3 · auto mínima", "suffix": "auto-min", "args": ["-f", "worstaudio/worst", "-x", "--audio-format", "mp3", "--audio-quality", "9"]},
+    {"id": "m4a", "name": "M4A", "suffix": "m4a", "args": ["-f", "bestaudio[ext=m4a]/bestaudio/best", "-x", "--audio-format", "m4a"]},
+    {"id": "mp4_1080", "name": "MP4 · hasta 1080p", "suffix": "1080p", "args": ["-f", "bv[height<=?1080][ext=mp4]+ba[ext=m4a]/b[height<=?1080][ext=mp4]/bv*[height<=?1080]+ba/bv*[height<=?1080]", "--merge-output-format", "mp4", "--remux-video", "mp4"]},
+    {"id": "mp4_max", "name": "MP4 · auto máxima", "suffix": "max", "args": ["-f", "bv*+ba/bv*", "--merge-output-format", "mp4", "--remux-video", "mp4"]},
+    {"id": "mp4_min", "name": "MP4 · auto mínima", "suffix": "min", "args": ["-f", "bv*+ba/bv*", "--format-sort-force", "-S", "+res,+fps,+br", "--merge-output-format", "mp4", "--remux-video", "mp4"]}
+  ],
+  "downloadArgs": [
+    "--ignore-config", "--no-plugin-dirs", "--no-remote-components", "--no-cache-dir",
+    "--no-simulate", "--no-quiet", "--no-color", "--encoding", "utf-8",
+    "--newline", "--progress", "--progress-delta", "0.3", "--output-na-placeholder", "null",
+    "--windows-filenames", "--trim-filenames", "160", "--no-overwrites", "--continue",
+    "--abort-on-error", "--abort-on-unavailable-fragments", "--socket-timeout", "20",
+    "--retries", "0", "--fragment-retries", "0", "--extractor-retries", "0", "--file-access-retries", "0",
+    "--print", "before_dl:DU-META {\"title\":%(title)j,\"second\":%(requested_formats.1.format_id)j,\"entry\":%(playlist_index)j,\"entries\":%(n_entries)j}",
+    "--progress-template", "download:DU-DOWN {\"status\":%(progress.status)j,\"got\":%(progress.downloaded_bytes)j,\"total\":%(progress.total_bytes)j,\"estimate\":%(progress.total_bytes_estimate)j,\"speed\":%(progress.speed)j,\"eta\":%(progress.eta)j,\"file\":%(progress.filename)j}",
+    "--progress-template", "postprocess:DU-POST %(progress.status)j",
+    "--print", "after_move:DU-FILE %(id)j"
+  ],
+  "cookieBrowsers": [
+    {"id": "brave", "name": "Brave", "pattern": "^(?:Default|Profile [0-9]+)$", "roots": [{"env": "LOCALAPPDATA", "path": "BraveSoftware/Brave-Browser/User Data"}]},
+    {"id": "chrome", "name": "Chrome", "pattern": "^(?:Default|Profile [0-9]+)$", "roots": [{"env": "LOCALAPPDATA", "path": "Google/Chrome/User Data"}]},
+    {"id": "edge", "name": "Edge", "pattern": "^(?:Default|Profile [0-9]+)$", "roots": [{"env": "LOCALAPPDATA", "path": "Microsoft/Edge/User Data"}]},
+    {"id": "firefox", "name": "Firefox", "pattern": "^[a-z0-9_.-]+$", "roots": [{"env": "APPDATA", "path": "Mozilla/Firefox/Profiles"}, {"env": "LOCALAPPDATA", "path": "Packages/Mozilla.Firefox_n80bbvh6b1yt2/LocalCache/Roaming/Mozilla/Firefox/Profiles"}]}
+  ],
+  "cookieError": "could not copy.*cookie database|could not find.*cookies database|failed to decrypt.*dpapi|could not find.*local state|failed to load cookies|netscape format|invalid cookie file",
+  "cookieWarning": "failed to decrypt|app.bound|could not be decrypted",
+  "cookieHelp": "Cierra {0} por completo y revisa el perfil. Si Windows protege la sesión, usa un archivo Netscape o Sin cookies.",
+  "cookieDiagnostics": [
+    {"id": "locked", "pattern": "could not copy.*cookie database|(?:cookie )?database is locked|cookie database.*(?:in use|sharing violation)", "detail": "No se pudo abrir la base de cookies de {0}.", "hint": "Cierra {0} por completo y pulsa R. Para enlaces públicos, usa 6 > Sin cookies."},
+    {"id": "missing_profile", "pattern": "could not find.*(?:cookies database|local state)|could not find.*browser profile|(?:cookies database|browser profile).*(?:not found|does not exist)", "detail": "No se encontró la base de cookies del perfil de {0}.", "hint": "Elige otro perfil con 6. Para enlaces públicos, puedes elegir Sin cookies."},
+    {"id": "protected", "pattern": "failed to decrypt.*(?:dpapi|cookie)|dpapi.*(?:failed|error)|app.bound.*encrypt|(?:unable|could not) to decrypt.*(?:v20|cookie)|cookies?.*could not be decrypted", "detail": "Windows impidió leer parte de la sesión de {0}.", "hint": "Usa 6 para elegir otro navegador, un archivo Netscape o Sin cookies."},
+    {"id": "invalid_file", "pattern": "netscape format|invalid cookie file|not a valid cookie file", "detail": "El archivo de cookies no tiene el formato Netscape.", "hint": "Usa 6 para elegir un archivo Netscape válido o Sin cookies."},
+    {"id": "unreadable", "pattern": "failed to load cookies|could not load cookies|failed to read.*cookies", "detail": "No se pudieron cargar las cookies seleccionadas.", "hint": "Abre 6 y elige otra fuente de cookies. Después pulsa R."},
+    {"id": "session_required", "pattern": "sign in to confirm|sign in if you['’]ve been granted access|this video is private|login required|log in to access", "detail": "El sitio pide una sesión con acceso al enlace.", "hint": "Usa 6 para elegir un perfil con acceso y luego pulsa R."}
+  ],
+  "updateArgs": ["--ignore-config", "--no-plugin-dirs", "--no-color", "--socket-timeout", "8", "--update-to", "stable"]
+}

@@ -1,0 +1,15 @@
+/.build/
+/.state/
+/.ultron-parciales/
+/tools/
+/dist/
+/_completados_*.txt
+/_errores_*.txt
+*.exe
+*.mp3
+*.mp4
+*.m4a
+*.part
+*.cookies.txt
+cookies*.txt
+.env
